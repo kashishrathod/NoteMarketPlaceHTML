@@ -4,14 +4,47 @@
         use PHPMailer\PHPMailer\SMTP;
         use PHPMailer\PHPMailer\Exception;
 
+
+        $email_expression = "/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/";
+        $name_expression = '/^[a-zA-Z ]*$/';
+        
+        $mail_sent = false;
+        $user_validation = true;
+        $subject_validation = true;
+        $des_validation = true;
+        $mail_validation = true;
+        
+       
+
 if(isset($_POST['submit']))
 {
-    if(filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
+    $subject = $_POST['subject'];
+    $body = $_POST['description'];
+    $user = $_POST['name'];
+    $useremail = $_POST['email'];
+
+
+    preg_match($name_expression, $user, $user_1);
+    if (!$user_1[0]) {
+        $user_validation = false;
+    }
+
+    preg_match($name_expression, $subject, $subject_1);
+    if (!$subject_1[0]) {
+        $subject_validation = false;
+    }
+
+    preg_match($name_expression, $body, $comment_1);
+    if (!$comment_1[0]) {
+        $des_validation = false;
+    }
+
+    if (!filter_var($useremail, FILTER_VALIDATE_EMAIL)) {
+        $mail_validation = false;
+    }
+    if($useremail != "" && $user_validation && $subject_validation && $des_validation && $mail_validation)
     {
-        $subject = $_POST['subject'];
-        $body = $_POST['description'];
-        $user = $_POST['name'];
-        $useremail = $_POST['email'];
+        
 
         require 'phpmailer/Exception.php';
         require 'phpmailer/PHPMailer.php';
@@ -112,23 +145,55 @@ else{
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="fulllname">Full Name<span class="required">*</span></label>
-                        <input type="text" name="name" class="form-control" id="fullname" placeholder="Enter your full name" required />
+                        <input type="text" name="name" class="form-control" id="fullname" placeholder="Enter your full name" />
+                        <div class="correct-email">
+                            <?php
+                                if (!$user_validation) {
+                                    echo "Please enter valid name!";
+                                }
+                             ?>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email<span class="required">*</span></label>
-                        <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter your email address" required>
+                        <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter your email address">
+
+                        <div class="correct-email">
+                            <?php
+                                if (!$mail_validation) {
+                                    echo "Please enter valid email!";
+                                }
+                             ?>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="sub">Subject<span class="required">*</span></label>
-                        <input type="text" name="subject" class="form-control" id="sub" placeholder="Enter your subject" required>
+                        <input type="text" name="subject" class="form-control" id="sub" placeholder="Enter your subject">
+
+                        <div class="correct-email">
+                            <?php
+                                if (!$subject_validation) {
+                                    echo "Please enter valid subject!";
+                                }
+                             ?>
+                        </div>
+
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="description">Description<span class="required">*</span></label><br>
                         <textarea id="description" name="description" rows="4" cols="65" placeholder="Enter your description"></textarea>
+                        <div class="correct-email">
+                            <?php
+                                if (!$des_validation) {
+                                    echo "Please enter comment!";
+                                }
+                             ?>
+                        </div>
+
                     </div>
                 </div>
             </div>
