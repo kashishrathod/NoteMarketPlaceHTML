@@ -27,24 +27,28 @@ session_start();
                         <a class="nav-link" href="contactus.php">Contact Us</a>
                     </li>
                     <li class="dropdown drop-nav-border">
+
+                    <?php if(isset($_SESSION['email'])) {?>
                             <a href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
                                 aria-expanded="false">
                                 <img src="img/pre-login/user-img.png" alt="user" class="img-fluid" style="margin-top: 9px">
                             </a>
+
+                            <?php } else { }?>
                             <div class="dropdown-menu shadow-drop dropdowncustom" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="userprofile.html">
+                                <a class="dropdown-item" href="userprofile.php">
                                     <h6>My Profile</h6>
                                 </a>
-                                <a class="dropdown-item" href="mydownload.html">
+                                <a class="dropdown-item" href="mydownload.php">
                                     <h6>My Downloads</h6>
                                 </a>
-                                <a class="dropdown-item" href="mysoldnotes.html">
+                                <a class="dropdown-item" href="mysoldnotes.php">
                                     <h6>My Sold Notes</h6>
                                 </a>
-                                <a class="dropdown-item" href="rejectednotes.html">
+                                <a class="dropdown-item" href="rejectednotes.php">
                                     <h6>My Rejected Notes</h6>
                                 </a>
-                                <a class="dropdown-item" href="changepass.html">
+                                <a class="dropdown-item" href="changepass.php">
                                     <h6>Change Password</h6>
                                 </a>
                                 
@@ -58,8 +62,8 @@ session_start();
                     
                     <li class="nav-item">
                     
-                    <?php if($_SESSION['login']){?>
-                        <a href="login.php"><button class="btn btn-nav-login" type="submit"><b>LOGOUT</b></button></a>
+                    <?php if(isset($_SESSION['email'])){?>
+                        <a href="logout.php"><button class="btn btn-nav-login" type="submit"><b>LOGOUT</b></button></a>
                                 <?php } 
                                 else{
                                 ?>
