@@ -10,6 +10,12 @@
         $message = "Email already exists!";
         $password_match = true;
         $length_check = true;
+        $name_validation = '/^[a-zA-Z ]*$/';
+        $password_validation = '/^(?=.[a-z])(?=.[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/';
+        $fname_validation = true;
+        $lname_validation = true;
+        $email_validation = true;
+        $pass_validation = true;
 
 
         if(isset($_POST['signup'])){
@@ -19,6 +25,26 @@
             $email = $_POST['email'];
             $password = $_POST['password'];
             $conform_psd = $_POST['confirm_password'];
+
+
+            preg_match($name_validation, $first_name, $match_fname);
+                if (!$match_fname[0]) {
+                    $fname_validation = false;
+                }
+
+            preg_match($name_validation, $last_name, $match_lname);
+                if (!$match_lname[0]) {
+                    $lname_validation = false;
+                }
+
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $email_validation = false;
+                }
+
+            $match_password = preg_match($password_validation, $password);
+                if (!$match_password) {
+                    $pass_validation = false;
+                }
 
             if ($password != $conform_psd) {
                 $password_match = false;
@@ -31,7 +57,7 @@
             if($check>0){
                 $mail_exist = true;
             }
-            else if(!$password_match && !$length_check){
+            else if($check == 0 && $password_match && $length_check && $lname_validation && $fname_validation && $email_validation && $pass_validation){
         
                 $query = "INSERT INTO users(role_id, firstname, lastname, email_id, password, isemailverified, createddate, isactive) VALUES(1, '$first_name', '$last_name', '$email', '$password', 0, NOW(), 1)";
                 $result = mysqli_query($conn, $query);
@@ -142,40 +168,67 @@
                         <p>Enter your details to signup</p>
                                    <?php
                                     if ($mail_sent)
-                                        echo "<span> Your account has been successfully created</span>";
+                                        echo "<span> Your account has been successfully created!</span>";
                                     ?>
                         
                         <div class="form-group signup-label">
                             <label for="fname">First Name<span class="required">*</span></label>
-                            <input type="text" name="f_name" class="form-control form-control-sm" id="fname" placeholder="Enter your first name" required>
+                            <input type="text" name="f_name" class="form-control form-control-sm" id="fname" placeholder="Enter your first name">
+                            <div class="correct-email">
+                                        <?php
+                                        if (!$fname_validation) {
+                                            echo "Please enter your first name!";
+                                        }
+                                        ?>
+                            </div>
                         </div>
                         
                         <div class="form-group signup-label">
                             <label for="lname">Last Name<span class="required">*</span></label>
-                            <input type="text" name="l_name" class="form-control form-control-sm" id="lname" placeholder="Enter your last name" required>
+                            <input type="text" name="l_name" class="form-control form-control-sm" id="lname" placeholder="Enter your last name">
+                            <div class="correct-email">
+                                        <?php
+                                        if (!$lname_validation) {
+                                            echo "Please enter your last name!";
+                                        }
+                                        ?>
+                            </div>
                         </div>
 
                         <div class="form-group signup-label">
                             <label for="email">Email<span class="required">*</span></label>
-                            <input type="email" name="email" class="form-control form-control-sm" id="email" aria-describedby="emailHelp" placeholder="Enter email" required>
-                        
+                            <input type="email" name="email" class="form-control form-control-sm" id="email" aria-describedby="emailHelp" placeholder="Enter email">
+                            <div class="correct-email">
                         <?php
+                        
                         if ($mail_exist) {
-                            echo "<h6 class='correct-email'>" . $message . "</h6>";
+                            echo  $message;
+                        }
+                        else if(!$email_validation){
+                            echo "Please enter your email!";
                         }
                         
                         ?>
                         </div>
+                        </div>
 
                         <div class="form-group signup-label">
                             <label for="password" class="pass">Password</label>
-                            <input type="password" name="password" class="form-control form-control-sm" id="password" placeholder="Password" required>
+                            <div class="password">
+                            
+                            <img src="img/pre-login/eye.png" class="toggle-password"  toggle="#password">
+                            </div>
+                            <input type="password" name="password" class="form-control form-control-sm" id="password" placeholder="Password">
+                            
                             <div class="correct-email">
                                         <?php
                                         if (!$password_match)
                                             echo "The Password doesn't match!";
                                         else if (!$length_check) {
-                                            echo "The Password Length Should be more then 6 characters";
+                                            echo "The Password Length Should be more then 6 characters!";
+                                        }
+                                        else if(!$pass_validation){
+                                            echo "The password contain atleast one uppercase latter, lowercase latter and numeric!";
                                         }
                                         ?>
                             </div>
@@ -184,14 +237,18 @@
                         
                         <div class="form-group signup-label">
                             <label for="conpassword" class="pass">Confirm password</label>
-                            <input type="password" name="confirm_password" class="form-control form-control-sm" id="conpassword" placeholder="Re-enter your passsword" required>
+                            <div class="password">
+                            
+                            <img src="img/pre-login/eye.png" class="toggle-password" id="conpassword" toggle="#conpassword">
+                            </div>
+                            <input type="password" name="confirm_password" class="form-control form-control-sm" id="conpassword" placeholder="Re-enter your passsword">
                         </div>
 
                         <button type="submit" name="signup" class="btn btn-block signup-btn">SIGNUP</button>
                         
                         <div class="already-signup">
                             Already have an account?
-                            <a href="#">Login</a>
+                            <a href="login.php">Login</a>
                         </div>
                         
                     </form>
@@ -211,6 +268,8 @@
 
     <!--bootstrap-->
     <script src="js/bootstrap/bootstrap.min.js"></script>
+
+    <script src="js/script.js"></script>
 
 </body>
 
