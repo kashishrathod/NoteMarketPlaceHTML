@@ -8,7 +8,7 @@
         $email_expression = "/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/";
         $name_expression = '/^[a-zA-Z ]*$/';
         
-        $mail_sent = false;
+        
         $user_validation = true;
         $subject_validation = true;
         $des_validation = true;
