@@ -37,7 +37,7 @@ if (isset($_POST['publish'])) {
     $publish_result = $_POST['publish_result'];
     $result_db2 = mysqli_query($conn, "SELECT COUNT(seller_note_id) FROM seller_notes where note_title LIKE '%$publish_result%' AND seller_notes.status=9");
 
-    $query2 = "SELECT seller_notes.publisheddate ,seller_notes.note_title, note_categories.category_name, reference_data.ref_value, seller_notes.selling_price
+    $query2 = "SELECT seller_notes.publisheddate, seller_notes.seller_note_id, seller_notes.note_title, note_categories.category_name, reference_data.ref_value, seller_notes.selling_price
     FROM seller_notes LEFT JOIN note_categories ON seller_notes.category=note_categories.note_categories_id LEFT JOIN reference_data
     ON seller_notes.ispaid =reference_data.reference_id WHERE (seller_notes.note_title LIKE '%$publish_result%' OR note_categories.category_name LIKE '%$publish_result%'
     OR seller_notes.selling_price LIKE '%$publish_result%' OR reference_data.ref_value LIKE '%$publish_result%' OR seller_notes.publisheddate LIKE '%$publish_result%') AND seller_notes.status=9 AND seller_id=$user";
@@ -46,7 +46,7 @@ if (isset($_POST['publish'])) {
 } else {
     $result_db2 = mysqli_query($conn, "SELECT COUNT(seller_note_id) FROM seller_notes WHERE status=9");
 
-    $query2 = "SELECT seller_notes.publisheddate ,seller_notes.note_title, note_categories.category_name, reference_data.ref_value, seller_notes.selling_price
+    $query2 = "SELECT seller_notes.publisheddate, seller_notes.seller_note_id,seller_notes.note_title, note_categories.category_name, reference_data.ref_value, seller_notes.selling_price
     FROM seller_notes LEFT JOIN note_categories ON seller_notes.category=note_categories.note_categories_id LEFT JOIN reference_data
     ON seller_notes.ispaid =reference_data.reference_id WHERE seller_notes.status=9 AND seller_id=$user";
     $result2 = mysqli_query($conn, $query2);
@@ -261,6 +261,7 @@ if (isset($_POST['publish'])) {
                             $category_name = $row['category_name'];
                             $ref_value = $row['ref_value'];
                             $selling_price = $row['selling_price'];
+                            $seller_note_id = $row['seller_note_id'];
 
 
                             echo "<tr>
