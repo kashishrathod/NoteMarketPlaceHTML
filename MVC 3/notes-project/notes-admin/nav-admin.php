@@ -15,7 +15,7 @@ while ($row = mysqli_fetch_assoc($query_pic)) {
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-light  bg-light fixed-top  general-navbar">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="dashboard.php">
         <img src="img/pre-login/logo.png" alt="Logo" />
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
