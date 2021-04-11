@@ -140,7 +140,12 @@ $total_pages = ceil($total_records / $limit);
 						<div class="result">
 							<img src="img/Search/university.png" alt="university">
 							<h6 class="result-data">
-								<?php echo "$university_name"; ?>
+								<?php if (!empty($university_name) && $university_name != "") {
+									echo "$university_name";
+								} else{
+									echo "Not defined";
+								} ?>
+
 							</h6>
 						</div>
 						<div class="result">
