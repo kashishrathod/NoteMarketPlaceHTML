@@ -160,11 +160,27 @@ if (isset($_POST['download'])) {
                         </div>
                         <div class="col-md-5 col-6">
                             <div class="details-info">
-                                <p><?php echo $institute; ?></p>
+                                <p><?php if (!empty($institute) && $institute != "") {
+                                        echo "$institute";
+                                    } else {
+                                        echo "Not defined";
+                                    } ?></p>
                                 <p><?php echo $country_name; ?></p>
-                                <p><?php echo $course; ?></p>
-                                <p><?php echo $course_code; ?></p>
-                                <p><?php echo $professor; ?></p>
+                                <p><?php if (!empty($course) && $course != "") {
+                                        echo "$course";
+                                    } else {
+                                        echo "Not defined";
+                                    } ?></p>
+                                <p><?php if (!empty($course_code) && $course_code != "") {
+                                        echo "$course_code";
+                                    } else {
+                                        echo "Not defined";
+                                    } ?></p>
+                                <p><?php if (!empty($professor) && $professor != "") {
+                                        echo "$professor";
+                                    } else {
+                                        echo "Not defined";
+                                    } ?></p>
                                 <p><?php echo $num_of_pages; ?></p>
                                 <p><?php echo $publisheddate; ?></p>
                                 <div class="row">
