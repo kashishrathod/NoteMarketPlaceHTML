@@ -159,7 +159,7 @@ if (isset($_SESSION['email'])) {
                 if (in_array($filecheck2, $fileextstored2)) {
 
                     $query_multiple = "insert into seller_notes_attachments(note_id, isactive)
-                    values($note_id, 1)";
+                    values($id1, 1)";
                     $result_multiple = mysqli_query($conn, $query_multiple);
                     $id_attach = mysqli_insert_id($conn);
 
@@ -183,7 +183,8 @@ if (isset($_SESSION['email'])) {
 
                     $path = '../Member/' . $id . '/' . $id1 . '/' . 'attachment' . '/' . $id_attach . '_' . time() . '.' . $filecheck2;
                     move_uploaded_file($_FILES['upload_note']['tmp_name'][$i], $path);
-                    $query_attach = "update seller_notes_attachments file_path='$path' where attach_id='$id1'";
+                    $file_name = $id_attach . '_' . time() . '.' . $filecheck2;
+                    $query_attach = "update seller_notes_attachments set file_path='$path',file_name='$file_name' where attach_id=$id_attach";
                     $result = mysqli_query($conn, $query_attach);
                 } else {
                     $validation_2 = false;
@@ -370,7 +371,8 @@ if (isset($_SESSION['email'])) {
 
                 $path = '../Member/' . $id . '/' . $note_id . '/' . 'attachment' . '/' . $id_attach . '_' . time() . '.' . $filecheck2;
                 move_uploaded_file($_FILES['upload_note']['tmp_name'][$i], $path);
-                $query_attach = "update seller_notes_attachments set file_path='$path' where attach_id='$id_attach'";
+                $file_name = $id_attach . '_' . time() . '.' . $filecheck2;
+                $query_attach = "update seller_notes_attachments set file_path='$path',file_name='$file_name' where attach_id='$id_attach'";
                 $result = mysqli_query($conn, $query_attach);
             } else {
                 $validation_2 = false;
@@ -770,7 +772,7 @@ if (isset($_SESSION['email'])) {
                                     <p>Are you sure you want to download this Paid note. Please confirm.</p>
 
                                     <button type="submit" class="btn btn-primary" name="yes-popup">Yes</button>
-                                    <button type="submit" class="btn btn-primary" name="cancle">Cancle</button>
+                                    <button type="submit" class="btn btn-primary" name="cancle">Cancel</button>
                                 </div>
                             </div>
                         </div>
