@@ -34,7 +34,7 @@ countries.country_name, note_categories.category_name, seller_notes.seller_id, u
 FROM seller_notes LEFT JOIN countries ON seller_notes.country = countries.country_id LEFT JOIN note_categories
 ON seller_notes.category = note_categories.note_categories_id
 LEFT JOIN users ON seller_notes.seller_id = users.userid WHERE seller_note_id=$id");
- while ($row = mysqli_fetch_assoc($query_details)) {
+while ($row = mysqli_fetch_assoc($query_details)) {
 
     $pic = $row['display_picture'];
     $title = $row['note_title'];
@@ -53,13 +53,13 @@ LEFT JOIN users ON seller_notes.seller_id = users.userid WHERE seller_note_id=$i
     $seller = $row['seller_id'];
     $email_id = $row['email_id'];
     $name = $row['firstname'];
- }
+}
 
 
 
 // $query_user = mysqli_query($conn, "SELECT * FROM users WHERE userid=$seller");
 // while ($row = mysqli_fetch_assoc($query_user)) {
-    
+
 // }
 
 $query_same_note = mysqli_query($conn, "SELECT * FROM downloads WHERE note_id=$id AND downloader=$user");
@@ -205,117 +205,133 @@ if (isset($_POST['yes-popup'])) {
             <div class="row">
                 <?php
                 ?>
-                    <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                        <div class="row">
-                            <div class="col-md-5 col-12">
-                                <?php echo "<img src='$pic' alt='book' class='img-fluid' style='height: 300px'>";  ?>
-                            </div>
-                            <div class="col-lg-7 col-md-12 col-sm-12 col-12">
-                                <h3> <?php echo "$title"; ?> </h3>
-                                <p><span><?php echo $category_name; ?></span></p>
-                                <p id="review"><?php echo $note_description; ?></p>
-                                <form action="" method="POST">
+                <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+                    <div class="row">
+                        <div class="col-md-5 col-12">
+                            <?php echo "<img src='$pic' alt='book' class='img-fluid' style='height: 300px'>";  ?>
+                        </div>
+                        <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                            <h3> <?php echo "$title"; ?> </h3>
+                            <p><span><?php echo $category_name; ?></span></p>
+                            <p id="review"><?php echo $note_description; ?></p>
+                            <form action="" method="POST">
 
-                                    <?php
-                                    if (isset($_SESSION['email'])) {
-                                        if ($free == '2') { ?>
-                                            <button type='submit' name='download' class='btn btn-primary' style='background-color: #6255a5;'>DOWNLOAD</button>
+                                <?php
+                                if (isset($_SESSION['email'])) {
+                                    if ($free == '2') { ?>
+                                        <button type='submit' name='download' class='btn btn-primary' style='background-color: #6255a5;'>DOWNLOAD</button>
 
-                                        <?php  } else {  ?>
-                                            <a role='button' type='submit' name='download-paid' class='btn btn-primary' data-toggle='modal' data-target='#exampleModal1'>DOWNLOAD / $<?php echo $price; ?></a>
-                                    <?php  }
-                                    } else {
-                                        echo "<a role='button' type='submit' class='btn btn-primary' href='login.php'>DOWNLOAD</a>";
-                                    }
-                                    ?>
+                                    <?php  } else {  ?>
+                                        <a role='button' type='submit' name='download-paid' class='btn btn-primary' data-toggle='modal' data-target='#exampleModal1'>DOWNLOAD / $<?php echo $price; ?></a>
+                                <?php  }
+                                } else {
+                                    echo "<a role='button' type='submit' class='btn btn-primary' href='login.php'>DOWNLOAD</a>";
+                                }
+                                ?>
 
-                                </form>
-                            </div>
+                            </form>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                        <div class="row">
-                            <div class="col-md-7 col-6">
-                                <div class="details">
-                                    <p>Institution:</p>
-                                    <p>Country:</p>
-                                    <p>Course Name:</p>
-                                    <p>Course Code:</p>
-                                    <p>Professor:</p>
-                                    <p>Number of Pages:</p>
-                                    <p>Approved Date:</p>
-                                    <p>Rating:</p>
-                                </div>
+                </div>
+                <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+                    <div class="row">
+                        <div class="col-md-7 col-6">
+                            <div class="details">
+                                <p>Institution:</p>
+                                <p>Country:</p>
+                                <p>Course Name:</p>
+                                <p>Course Code:</p>
+                                <p>Professor:</p>
+                                <p>Number of Pages:</p>
+                                <p>Approved Date:</p>
+                                <p>Rating:</p>
                             </div>
-                            <div class="col-md-5 col-6">
-                                <div class="details-info">
-                                    <p><?php echo $institute; ?></p>
-                                    <p><?php echo $country_name; ?></p>
-                                    <p><?php echo $course; ?></p>
-                                    <p><?php echo $course_code; ?></p>
-                                    <p><?php echo $professor; ?></p>
-                                    <p><?php echo $num_of_pages; ?></p>
-                                    <p><?php echo $publisheddate; ?></p>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div id="<?php echo $id; ?>" start="<?php echo $rate ?>" style="margin-top: -15px;"></div>
-                                            <?php
-                                            $query_rating = mysqli_query($conn, "SELECT avg(rating) FROM seller_notes_review WHERE note_id=$id");
-                                            while ($row = mysqli_fetch_assoc($query_rating)) {
-                                                $rate = $row['avg(rating)'];
-                                            }
-                                            ?>
-                                            <?php if ($rate != 0) { ?>
-                                                <script>
-                                                    $('#<?php echo $id; ?>').jsRapStar({
-                                                        length: 5,
-                                                        value: '<?php echo $rate; ?>',
-                                                        enabled: false
-                                                    });
-                                                </script>
-                                            <?php     } else { ?>
-                                                <script>
-                                                    $('#<?php echo $id; ?>').jsRapStar({
-                                                        length: 5,
-                                                        value: 0,
-                                                        enabled: false
-                                                    });
-                                                </script>
-                                            <?php } ?>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <?php
-                                            $review = mysqli_query($conn, "SELECT * FROM seller_notes_review WHERE note_id=$id");
-                                            $review_count = mysqli_num_rows($review);
-                                            ?>
+                        </div>
+                        <div class="col-md-5 col-6">
+                            <div class="details-info">
+                                <p><?php if (!empty($institute) && $institute != "") {
+                                        echo "$institute";
+                                    } else {
+                                        echo "Not defined";
+                                    } ?></p>
+                                <p><?php echo $country_name; ?></p>
+                                <p><?php if (!empty($course) && $course != "") {
+                                        echo "$course";
+                                    } else {
+                                        echo "Not defined";
+                                    } ?></p>
+                                <p><?php if (!empty($course_code) && $course_code != "") {
+                                        echo "$course_code";
+                                    } else {
+                                        echo "Not defined";
+                                    } ?></p>
+                                <p><?php if (!empty($professor) && $professor != "") {
+									echo "$professor";
+								} else{
+									echo "Not defined";
+								} ?></p>
+                                <p><?php echo $num_of_pages; ?></p>
+                                <p><?php echo $publisheddate; ?></p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div id="<?php echo $id; ?>" start="<?php echo $rate ?>" style="margin-top: -15px;"></div>
+                                        <?php
+                                        $query_rating = mysqli_query($conn, "SELECT avg(rating) FROM seller_notes_review WHERE note_id=$id");
+                                        while ($row = mysqli_fetch_assoc($query_rating)) {
+                                            $rate = $row['avg(rating)'];
+                                        }
+                                        ?>
+                                        <?php if ($rate != 0) { ?>
+                                            <script>
+                                                $('#<?php echo $id; ?>').jsRapStar({
+                                                    length: 5,
+                                                    value: '<?php echo $rate; ?>',
+                                                    enabled: false
+                                                });
+                                            </script>
+                                        <?php     } else { ?>
+                                            <script>
+                                                $('#<?php echo $id; ?>').jsRapStar({
+                                                    length: 5,
+                                                    value: 0,
+                                                    enabled: false
+                                                });
+                                            </script>
+                                        <?php } ?>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <?php
+                                        $review = mysqli_query($conn, "SELECT * FROM seller_notes_review WHERE note_id=$id");
+                                        $review_count = mysqli_num_rows($review);
+                                        ?>
 
-                                            <?php
-                                            if ($review_count == 0) { ?>
-                                                <p id="star-review">No Review</p>
-                                            <?php     } else { ?>
-                                                <p id="star-review"><?php echo $review_count; ?> Review</p>
-                                            <?php } ?>
-                                        </div>
+                                        <?php
+                                        if ($review_count == 0) { ?>
+                                            <p id="star-review">No Review</p>
+                                        <?php     } else { ?>
+                                            <p id="star-review"><?php echo $review_count; ?> Review</p>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <?php
-                            $query_inappropriate = mysqli_query($conn, "SELECT * FROM seller_notes_report_issue WHERE note_id=$id");
-                            $count_inappropriate = mysqli_num_rows($query_inappropriate);
-                            ?>
-
-                            <?php
-                            if ($count_inappropriate == 0) { ?>
-                                <p id="red-text">No Users have marked this note as inappropriate</p>
-                            <?php } else { ?>
-                                <p id="red-text"><?php echo $count_inappropriate; ?> Users have marked this note as inappropriate</p>
-                            <?php } ?>
-                        </div>
                     </div>
+                    <div class="row">
+                        <?php
+                        $query_inappropriate = mysqli_query($conn, "SELECT * FROM seller_notes_report_issue WHERE note_id=$id");
+                        $count_inappropriate = mysqli_num_rows($query_inappropriate);
+                        ?>
+
+                        <?php
+                        if ($count_inappropriate == 0) { ?>
+                            <p id="red-text">No Users have marked this note as inappropriate</p>
+                        <?php } else { ?>
+                            <p id="red-text"><?php echo $count_inappropriate; ?> Users have marked this note as inappropriate</p>
+                        <?php } ?>
+                    </div>
+                </div>
             </div>
-        
+
         </div>
     </section>
 
@@ -357,7 +373,6 @@ if (isset($_POST['yes-popup'])) {
                     <div class="modal-body">
                         <div class="thanks">
                             <p>Are you sure you want to download this Paid note. Please confirm.</p>
-
                             <button type="submit" class="btn btn-primary" name="yes-popup">Yes</button>
                             <button type="submit" class="btn btn-primary" name="no">No</button>
                         </div>
@@ -366,13 +381,13 @@ if (isset($_POST['yes-popup'])) {
             </div>
         </div>
 
-        <?php 
-        
+        <?php
+
         $query_config = mysqli_query($conn, "SELECT info_value FROM system_configuration WHERE cofig_id=2");
-        while($row = mysqli_fetch_assoc($query_config)){
+        while ($row = mysqli_fetch_assoc($query_config)) {
             $info_value = $row['info_value'];
         }
-        
+
         ?>
 
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
