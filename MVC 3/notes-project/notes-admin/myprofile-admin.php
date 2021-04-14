@@ -1,6 +1,13 @@
 <?php include "admin_db.php";
 session_start();
 
+$secondary_email = "";
+$phone_no = "";
+$phone_code = "";
+$profile_picture = "";
+$destinationfile = "../Member/Default_.png";
+
+
 if (isset($_SESSION['email'])) {
     $email = $_SESSION['email'];
     $query = mysqli_query($conn, "SELECT * FROM users WHERE email_id='$email'");
@@ -9,6 +16,13 @@ if (isset($_SESSION['email'])) {
         $lastname = $row['lastname'];
         $email_id = $row['email_id'];
         $userid = $row['userid'];
+    }
+    $query_profile = mysqli_query($conn, "SELECT * FROM user_profile WHERE user_id=$userid");
+    while($row = mysqli_fetch_assoc($query_profile)){
+        $secondary_email = $row['secondary_email'];
+        $phone_no = $row['phone_no'];
+        $phone_code = $row['phone_code'];
+        $profile_picture = $row['profile_picture'];
     }
     if (isset($_POST['profile'])) {
         $fname = $_POST['fname'];
@@ -21,29 +35,27 @@ if (isset($_SESSION['email'])) {
 
         $files = $_FILES['profile_pic'];
 
-            $filename = $files['name'];
-            $filetmp = $files['tmp_name'];
+        $filename = $files['name'];
+        $filetmp = $files['tmp_name'];
+        
+        $extention = explode('.', $filename);
+        $filecheck = strtolower(end($extention));
 
+        $fileextstored = array('jpg', 'png', 'jpeg');;
 
-            $extention = explode('.', $filename);
-            $filecheck = strtolower(end($extention));
-
-            $fileextstored = array('jpg', 'png', 'jpeg');;
-
-            if (in_array($filecheck, $fileextstored)) {
-                if (!is_dir('../Member/')) {
-                    mkdir('../Member/');
-                }
-
-                if (!is_dir('../Member/' . $userid)) {
-                    mkdir('../Member/' . $userid);
-                }
-
-                
-                $destinationfile = '../Member/' . $userid . "profile-pic-" . time() . '.' . $filecheck;
-                move_uploaded_file($filetmp, $destinationfile); 
-                
+        if (in_array($filecheck, $fileextstored)) {
+            if (!is_dir('../Member/')) {
+                mkdir('../Member/');
             }
+
+            if (!is_dir('../Member/' . $userid)) {
+                mkdir('../Member/' . $userid);
+            }
+
+
+            $destinationfile = '../Member/' . $userid . "profile-pic-" . time() . '.' . $filecheck;
+            move_uploaded_file($filetmp, $destinationfile);
+        }
         $query_profile_update = mysqli_query($conn, "UPDATE user_profile SET secondary_email='$semail', phone_code=$phone_code, phone_no='$phone_no', profile_picture='$destinationfile' WHERE user_id=$userid");
     }
 }
@@ -70,7 +82,7 @@ if (isset($_SESSION['email'])) {
 
 
 <body>
-    <?php include "nav-admin.php" ?>
+<?php include "nav-admin.php" ?>
 
     <div class="general-height">
         <form action="" method="POST" enctype="multipart/form-data">
@@ -97,7 +109,7 @@ if (isset($_SESSION['email'])) {
                             </div>
                             <div class="form-group">
                                 <label for="email">Secondary Email</label>
-                                <input type="semail" class="form-control" name="semail" id="semail" aria-describedby="emailHelp" placeholder="Enter your email address">
+                                <input type="semail" class="form-control" name="semail" id="semail" aria-describedby="emailHelp" value="<?php echo $secondary_email ?>" placeholder="Enter your email address">
                             </div>
                             <div class="row">
                                 <div class="col-md-4">
@@ -108,7 +120,7 @@ if (isset($_SESSION['email'])) {
                                         while ($row = mysqli_fetch_assoc($query_country)) {
                                             $country_code = $row['country_code'];
                                             $country_id = $row['country_id'];
-                                            echo "<option value='$country_id'>$country_code</option>";
+                                            echo "<option value='<?php echo $phone_code ?>'>$country_code</option>";
                                         }
 
                                         ?>
@@ -117,7 +129,7 @@ if (isset($_SESSION['email'])) {
                                 <div class="col-md-8">
                                     <div class="form-group phonenumber">
                                         <label for="phone"><br></label>
-                                        <input type="tel" name="phone_no" class="form-control" id="phone" placeholder="Enter your Phone Number">
+                                        <input type="tel" name="phone_no" class="form-control" value="<?php echo $phone_no ?>" id="phone" placeholder="Enter your Phone Number">
                                     </div>
                                 </div>
                             </div>
@@ -127,7 +139,8 @@ if (isset($_SESSION['email'])) {
                                     <label for="file-input">
                                         <img src="img/myprofile/upload-file.png">
                                     </label>
-                                    <input id="file-input" name="profile_pic" type="file">
+                                    <input id="file-input" name="profile_pic" type="file" value="<?php echo $profile_picture ?>">
+                                    <div id="profile-name" style="margin-top: -30px;"></div>
                                 </div>
                             </div>
                             <div class="row btn-height">
@@ -147,6 +160,19 @@ if (isset($_SESSION['email'])) {
 
     <!--custom jquery-->
     <script src="js/jquery.min.js"></script>
+
+    <!-- display src path of img -->
+    <script>
+        var input1 = document.getElementById("file-input");
+        var infoArea1 = document.getElementById("profile-name");
+        input1.addEventListener("change", showProfileName1);
+
+        function showProfileName1(event) {
+            var input1 = event.srcElement;
+            var fileName1 = input1.files[0].name;
+            infoArea1.textContent = "File name: " + fileName1;
+        }
+    </script>
 
     <!--bootstrap-->
     <script src="js/bootstrap/bootstrap.min.js"></script>
