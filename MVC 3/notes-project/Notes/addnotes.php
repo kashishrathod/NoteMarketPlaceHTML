@@ -452,6 +452,7 @@ if (isset($_SESSION['email'])) {
                                     <img src="img/Add-notes/upload-file.png">
                                 </label>
                                 <input id="file-input3" type="file" name="display_picture">
+                                <div id="display_note"></div>
                             </div>
                             <div class="incorrect-psd">
                                 <?php
@@ -789,6 +790,29 @@ if (isset($_SESSION['email'])) {
     <?php include "footer.php"; ?>
 
     <script src="js/jquery.min.js"></script>
+
+    <script>
+        var input3 = document.getElementById("file-input3");
+        var infoArea3 = document.getElementById("display_note");
+        input3.addEventListener("change", showProfileName3);
+
+        function showProfileName3(event) {
+            var input3 = event.srcElement;
+            var fileName3 = input3.files[0].name;
+            infoArea3.textContent = "File name: " + fileName3;
+        }
+    </script>
+    <script>
+        var input4 = document.getElementById("file-input1");
+        var infoArea4 = document.getElementById("note_preview_pdf");
+        input4.addEventListener("change", showProfileName4);
+
+        function showProfileName4(event) {
+            var input4 = event.srcElement;
+            var fileName4 = input4.files[0].name;
+            infoArea4.textContent = "File name: " + fileName4;
+        }
+    </script>
 
     <!--bootstrap-->
     <script src="js/bootstrap/bootstrap.min.js"></script>
