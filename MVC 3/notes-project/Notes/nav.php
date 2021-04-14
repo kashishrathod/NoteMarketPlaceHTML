@@ -36,7 +36,7 @@ if (isset($_SESSION)) {
 
                     <a href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <?php
-                        $profile = "";
+                       // $profile = "";
                         $email = $_SESSION['email'];
                         $query = mysqli_query($conn, "SELECT * FROM users WHERE email_id='$email'");
                         while ($row = mysqli_fetch_assoc($query)) {
@@ -48,7 +48,7 @@ if (isset($_SESSION)) {
                             $profile = $row['profile_picture'];
                         }
                         
-                        if ($count_pic > 0)
+                        if (!empty($profile) && $profile!= "")
                             echo "<img src='$profile' alt='user' class='img-fluid' style='margin-top: 9px; width: 40px; height: 40px; border-radius: 50%;'>";
                         else
                             echo "<img src='../Member/14profile-pic-1617128757.png' alt='user' class='img-fluid' style='margin-top: 9px; width: 40px; height: 40px; border-radius: 50%;'>";
