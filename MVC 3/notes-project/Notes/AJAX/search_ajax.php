@@ -116,7 +116,7 @@ $total_pages = ceil($total_records / $limit);
 				$date = $row['publisheddate'];
 				$noteid = $row['seller_note_id'];
 
-				$query_rating = mysqli_query($conn, "SELECT avg(rating) FROM seller_notes_review WHERE note_id=$noteid");
+				$query_rating = mysqli_query($conn, "SELECT avg(rating) FROM seller_notes_review WHERE note_id=$noteid AND isactive=1");
 				while ($row = mysqli_fetch_assoc($query_rating)) {
 					$rate = $row['avg(rating)'];
 				}
@@ -180,7 +180,7 @@ $total_pages = ceil($total_records / $limit);
 							</div>
 							<div class="col-md-6">
 								<?php
-								$review = mysqli_query($conn, "SELECT * FROM seller_notes_review WHERE note_id=$noteid");
+								$review = mysqli_query($conn, "SELECT * FROM seller_notes_review WHERE note_id=$noteid AND isactive=1");
 								$review_count = mysqli_num_rows($review);
 								?>
 								<?php
