@@ -95,13 +95,13 @@ while ($row = mysqli_fetch_assoc($query_pic)) {
                 <?php if (isset($_SESSION['email'])) { ?>
                     <a href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <?php
-                        $profile = " ";
+                       // $profile = " ";
                         $query_profile = mysqli_query($conn, "SELECT * FROM user_profile WHERE user_id=$userid");
                         $count = mysqli_num_rows($query_profile);
                         while ($row = mysqli_fetch_assoc($query_profile)) {
                             $profile = $row['profile_picture'];
                         }
-                        if ($count > 0) { ?>
+                        if (!empty($profile) && $profile != "") { ?>
                             <img src="<?php echo $profile ?>" alt="user" class="img-fluid" style="margin-top: 9px">
                         <?php  } else { ?>
                             <img src="img/pre-login/user-img.png" alt="user" class="img-fluid" style="margin-top: 9px">
