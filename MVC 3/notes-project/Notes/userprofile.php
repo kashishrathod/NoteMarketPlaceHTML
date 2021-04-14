@@ -1,6 +1,8 @@
 <?php
 include "db_connection.php";
 
+$phone_msg = true;
+
 session_start();
 
 if (isset($_SESSION['email'])) {
@@ -22,10 +24,12 @@ if (isset($_SESSION['email'])) {
     $fname = "";
 
     $email = $_SESSION['email'];
-    $query = "select userid from users where email_id='$email'";
+    $query = "select * from users where email_id='$email'";
     $userid = mysqli_query($conn, $query);
     while ($row = mysqli_fetch_assoc($userid)) {
         $id = $row['userid'];
+        $fname = $row['firstname'];
+        $lname = $row['lastname'];
     }
 
     $query_delete = mysqli_query($conn, "SELECT profile_picture FROM user_profile WHERE user_id=$id");
@@ -72,16 +76,17 @@ if (isset($_SESSION['email'])) {
             $phone_code = $_POST['phoneno'];
             $gender = $_POST['gender'];
 
+            if (!(is_numeric($phone)) && $phone != "") {
+                $phone_msg = false;
+            } else {
+                $query_update = "UPDATE user_profile SET address_1='$address1', phone_no='$phone',
+                city='$city', zip_code='$zipcode', address_2='$address2', state='$state',
+                university='$university', college='$college', date_of_birth='$dob', gender=$gender,
+                country=$country, phone_code=$phone_code WHERE user_id=$id";
 
-            $query_update = "UPDATE user_profile SET address_1='$address1', phone_no='$phone',
-            city='$city', zip_code='$zipcode', address_2='$address2', state='$state',
-            university='$university', college='$college', date_of_birth='$dob', gender=$gender,
-            country=$country, phone_code=$phone_code WHERE user_id=$id";
-
-            $result_update = mysqli_query($conn, $query_update);
-            if (!$result_update) {
-                die("fail" . mysqli_error($conn));
+                $result_update = mysqli_query($conn, $query_update);
             }
+
 
             $files = $_FILES['display'];
 
@@ -121,16 +126,6 @@ if (isset($_SESSION['email'])) {
             $query_user = "UPDATE users SET firstname='$firstname', lastname='$lastname' WHERE userid=$id";
             $result_user = mysqli_query($conn, $query_user);
         }
-
-        $get_fname = mysqli_query($conn, "SELECT * FROM users WHERE userid=$id");
-        while ($row = mysqli_fetch_assoc($get_fname)) {
-            $fname = $row['firstname'];
-        }
-
-        $get_lname = mysqli_query($conn, "SELECT * FROM users WHERE userid=$id");
-        while ($row = mysqli_fetch_assoc($get_lname)) {
-            $lname = $row['lastname'];
-        }
     } else if (isset($_POST['submit'])) {
 
         $emailid = $_POST['emailid'];
@@ -147,15 +142,20 @@ if (isset($_SESSION['email'])) {
         $phone_code = $_POST['phoneno'];
         $gender = $_POST['gender'];
 
-        $query_insert = "INSERT INTO user_profile(user_id, gender, phone_code, date_of_birth, secondary_email, phone_no, profile_picture,
-        address_1, address_2, city, state, zip_code, country, university, college, createddate) VALUES($id, $gender, $phone_code, '$dob', '$emailid', '$phone',
-        '../Member/default/reviewer-3.png', '$address1', '$address2', '$city', '$state', '$zipcode', '$country', '$university', '$college', NOW())";
+        if (!(is_numeric($phone)) && $phone != "") {
+            $phone_msg = false;
+        } else {
 
-        $result_insert = mysqli_query($conn, $query_insert);
+            $query_insert = "INSERT INTO user_profile(user_id, gender, phone_code, date_of_birth, secondary_email, phone_no, profile_picture,
+            address_1, address_2, city, state, zip_code, country, university, college, createddate) VALUES($id, $gender, $phone_code, '$dob', '$emailid', '$phone',
+            '../Member/default/reviewer-3.png', '$address1', '$address2', '$city', '$state', '$zipcode', '$country', '$university', '$college', NOW())";
 
-        if (!$result_insert) {
-            die("fail" . mysqli_error($conn));
+            $result_insert = mysqli_query($conn, $query_insert);
+            header("Refresh:0;");
         }
+
+
+
         $files = $_FILES['display'];
 
 
@@ -253,7 +253,7 @@ if (isset($_SESSION['email'])) {
                         </div>
                         <div class="form-group">
                             <label for="email">Email<span class="required">*</span></label>
-                            <input type="email" name="emailid" value="<?php echo $emailid; ?>" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter your email address">
+                            <input type="email" name="emailid" value="<?php echo $email; ?>" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter your email address">
                         </div>
                         <div class="form-group">
                             <label for="gender">Gender</label>
@@ -295,6 +295,7 @@ if (isset($_SESSION['email'])) {
                                     <img src="img/Add-notes/upload-file.png">
                                 </label>
                                 <input id="file-input" name="display" type="file">
+                                <div id="display_picture"></div>
                             </div>
                         </div>
                     </div>
@@ -343,7 +344,13 @@ if (isset($_SESSION['email'])) {
                             <div class="col-lg-8 col-md-8 col-sm-7 col-7 form-group">
                                 <div class="form-group phonenumber">
                                     <label for="phone"><br></label>
-                                    <input type="tel" value="<?php echo $phone; ?>" name="phone" class="form-control" id="phone" placeholder="phone no.">
+                                    <input type="tel" value="<?php echo $phone; ?>" name="phone" class="form-control" id="phone" placeholder="phone no." maxlength="10">
+                                    <?php
+                                    if ($phone_msg == false) {
+                                        echo "<span style='color: red; font-size: 10px;'>only digits are allowed!</span>";
+                                    }
+
+                                    ?>
                                 </div>
                             </div>
                         </div>
@@ -458,6 +465,18 @@ if (isset($_SESSION['email'])) {
     <?php include "footer.php"; ?>
     <!--custom jquery-->
     <script src="js/jquery.min.js"></script>
+
+    <script>
+        var input2 = document.getElementById("file-input");
+        var infoArea2 = document.getElementById("display_picture");
+        input2.addEventListener("change", showProfileName2);
+
+        function showProfileName2(event) {
+            var input2 = event.srcElement;
+            var fileName2 = input2.files[0].name;
+            infoArea2.textContent = "File name: " + fileName2;
+        }
+    </script>
 
     <!--bootstrap-->
     <script src="js/bootstrap/bootstrap.min.js"></script>
