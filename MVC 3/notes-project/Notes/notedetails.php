@@ -276,7 +276,7 @@ if (isset($_POST['yes-popup'])) {
                                     <div class="col-md-6">
                                         <div id="<?php echo $id; ?>" start="<?php echo $rate ?>" style="margin-top: -15px;"></div>
                                         <?php
-                                        $query_rating = mysqli_query($conn, "SELECT avg(rating) FROM seller_notes_review WHERE note_id=$id");
+                                        $query_rating = mysqli_query($conn, "SELECT avg(rating) FROM seller_notes_review WHERE note_id=$id AND isactive=1");
                                         while ($row = mysqli_fetch_assoc($query_rating)) {
                                             $rate = $row['avg(rating)'];
                                         }
@@ -301,7 +301,7 @@ if (isset($_POST['yes-popup'])) {
                                     </div>
                                     <div class="col-md-6">
                                         <?php
-                                        $review = mysqli_query($conn, "SELECT * FROM seller_notes_review WHERE note_id=$id");
+                                        $review = mysqli_query($conn, "SELECT * FROM seller_notes_review WHERE note_id=$id AND isactive=1");
                                         $review_count = mysqli_num_rows($review);
                                         ?>
 
@@ -383,7 +383,7 @@ if (isset($_POST['yes-popup'])) {
 
         <?php
 
-        $query_config = mysqli_query($conn, "SELECT info_value FROM system_configuration WHERE cofig_id=2");
+        $query_config = mysqli_query($conn, "SELECT info_value FROM system_configuration WHERE information='phone_number'");
         while ($row = mysqli_fetch_assoc($query_config)) {
             $info_value = $row['info_value'];
         }
