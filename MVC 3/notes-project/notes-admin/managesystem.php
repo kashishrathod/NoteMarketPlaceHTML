@@ -1,9 +1,14 @@
 <?php include "admin_db.php";
 session_start();
 
+$destinationfile1 = "../Member/Default_.jpg";
+$destinationfile = "../Member/Default_.png";
 // support email
 
 $query_get_config_value = mysqli_query($conn, "SELECT information, info_value FROM system_configuration WHERE information='support_email'");
+while ($row = mysqli_fetch_assoc($query_get_config_value)) {
+    $support_email_value = $row['info_value'];
+}
 $count_support_email = mysqli_num_rows($query_get_config_value);
 if (isset($_POST['config_button'])) {
     $support_email = $_POST['support_email'];
@@ -18,6 +23,9 @@ if (isset($_POST['config_button'])) {
 // phone no
 
 $query_get_phone_no = mysqli_query($conn, "SELECT information, info_value FROM system_configuration WHERE information='phone_number'");
+while ($row = mysqli_fetch_assoc($query_get_phone_no)) {
+    $phone_no_value = $row['info_value'];
+}
 $count_phone_no = mysqli_num_rows($query_get_phone_no);
 if (isset($_POST['config_button'])) {
     $phone_number = $_POST['phone_number'];
@@ -32,6 +40,9 @@ if (isset($_POST['config_button'])) {
 // email_user
 
 $query_get_email_user = mysqli_query($conn, "SELECT information, info_value FROM system_configuration WHERE information='email_user'");
+while ($row = mysqli_fetch_assoc($query_get_email_user)) {
+    $email_user_value = $row['info_value'];
+}
 $count_email_user = mysqli_num_rows($query_get_email_user);
 if (isset($_POST['config_button'])) {
     $email_user = $_POST['email_user'];
@@ -46,6 +57,9 @@ if (isset($_POST['config_button'])) {
 // facebook
 
 $query_get_facebook = mysqli_query($conn, "SELECT information, info_value FROM system_configuration WHERE information='facebook'");
+while ($row = mysqli_fetch_assoc($query_get_facebook)) {
+    $facebook_value = $row['info_value'];
+}
 $count_facebook = mysqli_num_rows($query_get_facebook);
 if (isset($_POST['config_button'])) {
     $facebook = $_POST['facebook'];
@@ -60,6 +74,9 @@ if (isset($_POST['config_button'])) {
 // twitter
 
 $query_get_twitter = mysqli_query($conn, "SELECT information, info_value FROM system_configuration WHERE information='twitter'");
+while ($row = mysqli_fetch_assoc($query_get_twitter)) {
+    $twitter_value = $row['info_value'];
+}
 $count_twitter = mysqli_num_rows($query_get_twitter);
 if (isset($_POST['config_button'])) {
     $twitter = $_POST['twitter'];
@@ -73,6 +90,9 @@ if (isset($_POST['config_button'])) {
 
 // linkedin
 $query_get_linkedin = mysqli_query($conn, "SELECT information, info_value FROM system_configuration WHERE information='linkedin'");
+while ($row = mysqli_fetch_assoc($query_get_linkedin)) {
+    $linkedin_value = $row['info_value'];
+}
 $count_linkedin = mysqli_num_rows($query_get_linkedin);
 if (isset($_POST['config_button'])) {
     $linkedin = $_POST['linkedin'];
@@ -88,6 +108,9 @@ if (isset($_POST['config_button'])) {
 
 $query_get_note = mysqli_query($conn, "SELECT information, info_value FROM system_configuration WHERE information='note'");
 $count_note = mysqli_num_rows($query_get_note);
+while($row = mysqli_fetch_assoc($query_get_note)){
+    $note_value = $row['info_value'];
+}
 
 if (isset($_POST['config_button'])) {
 
@@ -121,11 +144,14 @@ if (isset($_POST['config_button'])) {
 
 // upload picture for default pic
 
-$query_get_profile = mysqli_query($conn, "SELECT information, info_value FROM system_configuration WHERE information='note_profile'");
+$query_get_profile = mysqli_query($conn, "SELECT information, info_value FROM system_configuration WHERE information='profile'");
+while($row = mysqli_fetch_assoc($query_get_profile)){
+    $profile_value = $row ['info_value'];
+}
 $count_profile = mysqli_num_rows($query_get_profile);
 
 if (isset($_POST['config_button'])) {
-
+    
     $files = $_FILES['profile_default_picture'];
     $filename = $files['name'];
     $filetmp = $files['tmp_name'];
@@ -147,10 +173,10 @@ if (isset($_POST['config_button'])) {
     if ($count_profile == 0) {
 
         $insert_profile = mysqli_query($conn, "INSERT INTO system_configuration(information, info_value, isactive)
-            VALUES('note_profile', '$destinationfile', 1)");
+            VALUES('profile', '$destinationfile', 1)");
     } else {
 
-        $update_profile = mysqli_query($conn, "UPDATE system_configuration SET info_value='$destinationfile' WHERE information='note_profile'");
+        $update_profile = mysqli_query($conn, "UPDATE system_configuration SET info_value='$destinationfile' WHERE information='profile'");
     }
 }
 
@@ -193,28 +219,28 @@ if (isset($_POST['config_button'])) {
                     <div class="col-lg-7 col-md-7 col-sm-12 col-12">
                         <div class="form-group">
                             <label for="email">Support emails address<span class="required">*</span></label>
-                            <input type="email" name="support_email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter your email address" required>
+                            <input type="email" name="support_email" value="<?php echo $support_email_value ?>" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter your email address" required>
                         </div>
 
                         <div class="form-group">
                             <label for="phone">Support phone number<span class="required">*</span></label>
-                            <input type="tel" name="phone_number" class="form-control" id="phone" placeholder="enter phone number" required>
+                            <input type="tel" name="phone_number" value="<?php echo $phone_no_value ?>" class="form-control" id="phone" placeholder="enter phone number" required>
                         </div>
                         <div class="form-group">
                             <label for="email">Emails Address(es) (for various events system will send notifications to these userd)<span class="required">*</span></label>
-                            <input type="email" class="form-control" name="email_user" id="email" aria-describedby="emailHelp" placeholder="Enter your email address" required>
+                            <input type="email" class="form-control" value="<?php echo $email_user_value ?>" name="email_user" id="email" aria-describedby="emailHelp" placeholder="Enter your email address" required>
                         </div>
                         <div class="form-group">
                             <label for="facebook">Facebook URL</label>
-                            <input type="text" class="form-control" name="facebook" id="facebook" placeholder="Enter facebook url">
+                            <input type="text" class="form-control" value="<?php echo $facebook_value ?>" name="facebook" id="facebook" placeholder="Enter facebook url">
                         </div>
                         <div class="form-group">
                             <label for="twitter">Twitter URL</label>
-                            <input type="text" class="form-control" name="twitter" id="twitter" placeholder="Enter twitter url">
+                            <input type="text" class="form-control" value="<?php echo $twitter_value ?>" name="twitter" id="twitter" placeholder="Enter twitter url">
                         </div>
                         <div class="form-group">
                             <label for="linkedin">Linkedin URL</label>
-                            <input type="text" class="form-control" name="linkedin" id="linkedin" placeholder="Enter linkedin url">
+                            <input type="text" class="form-control" value="<?php echo $linkedin_value ?>" name="linkedin" id="linkedin" placeholder="Enter linkedin url">
                         </div>
 
                         <div class="form-group">
@@ -223,7 +249,8 @@ if (isset($_POST['config_button'])) {
                                 <label for="file-input_1">
                                     <img src="img/myprofile/upload-file.png">
                                 </label>
-                                <input id="file-input_1" name="note_default" type="file">
+                                <input id="file-input_1" name="note_default" type="file" value="<?php echo $note_value ?>">
+                                <div id="note_default_pic"></div>
                             </div>
                         </div>
 
@@ -233,7 +260,8 @@ if (isset($_POST['config_button'])) {
                                 <label for="file-input">
                                     <img src="img/myprofile/upload-file.png">
                                 </label>
-                                <input id="file-input" name="profile_default_picture" type="file">
+                                <input id="file-input" name="profile_default_picture" type="file" value="<?php echo $profile_value ?>">
+                                <div id="profile_default_pic"></div>
                             </div>
                         </div>
                         <div class="row btn-height">
@@ -253,6 +281,29 @@ if (isset($_POST['config_button'])) {
 
     <!--custom jquery-->
     <script src="js/jquery.min.js"></script>
+
+    <script>
+        var input6 = document.getElementById("file-input_1");
+        var infoArea6 = document.getElementById("note_default_pic");
+        input6.addEventListener("change", showProfileName6);
+
+        function showProfileName6(event) {
+            var input6 = event.srcElement;
+            var fileName6 = input6.files[0].name;
+            infoArea6.textContent = "File name: " + fileName6;
+        }
+    </script>
+    <script>
+        var input7 = document.getElementById("file-input");
+        var infoArea7 = document.getElementById("profile_default_pic");
+        input7.addEventListener("change", showProfileName7);
+
+        function showProfileName7(event) {
+            var input7 = event.srcElement;
+            var fileName7 = input7.files[0].name;
+            infoArea7.textContent = "File name: " + fileName7;
+        }
+    </script>
 
     <!--bootstrap-->
     <script src="js/bootstrap/bootstrap.min.js"></script>
