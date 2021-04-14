@@ -103,7 +103,7 @@ if (isset($_POST['signup'])) {
                         <td style='font-size: 16px;color: #333333;font-weight: 400;height: 25px;'>Simply click below for email verification.</td>
                     </tr>
                     <tr>
-                        <td style='height: 60px;'><a href='check.php?userid=$id'><button style='width: 300px;background-color: #6255a5;height: 50px;border-radius: 3px;font-size: 18px;color: #fff;line-height: 22px; border:transparent;text-transform: uppercase;'>verify email address</button></a></td>
+                        <td style='height: 60px;'><a href='http://localhost/notes-project/Notes/check.php?userid=$id'><button style='width: 300px;background-color: #6255a5;height: 50px;border-radius: 3px;font-size: 18px;color: #fff;line-height: 22px; border:transparent;text-transform: uppercase;'>verify email address</button></a></td>
                     </tr>
                 </table>   
             ";
@@ -111,6 +111,7 @@ if (isset($_POST['signup'])) {
             $mail->AltBody = 'Plain text message body for non-HTML email client. Gmail SMTP email body.';   //Alternate body of email
 
             $mail->send();
+            $mail_sent = true;
             //echo "Email message sent.";
         } catch (Exception $e) {
             echo "Error in sending email. Mailer Error: {$mail->ErrorInfo}";
@@ -157,8 +158,10 @@ if (isset($_POST['signup'])) {
                         <h3 id="login-page-signup">Create an Account</h3>
                         <p>Enter your details to signup</p>
                         <?php
-                        if ($mail_sent)
-                            echo "<span> Your account has been successfully created!</span>";
+                        if ($mail_sent == true) {
+                            echo "<span style='color: green;'><center>Your account has been successfully created!</center></span>";
+                        }
+
                         ?>
 
                         <div class="form-group signup-label">
@@ -237,6 +240,12 @@ if (isset($_POST['signup'])) {
                             Already have an account?
                             <a href="login.php">Login</a>
                         </div>
+                        <?php 
+                        if ($mail_sent == true) {
+                            echo "<span style='color: #6255a5; font-size:14px;'><b>Please verify your email address $email<b></span>";
+                        }
+                        
+                        ?>
 
                     </form>
 
