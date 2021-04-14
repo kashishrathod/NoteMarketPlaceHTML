@@ -87,7 +87,7 @@ if (isset($_GET['id'])) {
 
                     <div id="rate<?php echo $review_id; ?>" start="<?php echo $rate_user; ?>" style="margin-left: 0px; margin-top: -13px;"></div>
                     <?php
-                        $query_review_rate = mysqli_query($conn, "SELECT * FROM seller_notes_review WHERE note_id=$id1 AND reviewed_by_id=$userid");
+                        $query_review_rate = mysqli_query($conn, "SELECT * FROM seller_notes_review WHERE note_id=$id1 AND reviewed_by_id=$userid AND isactive=1");
                         while ($row = mysqli_fetch_assoc($query_review_rate)) {
                             $rate_user = $row['rating'];
                             $comment = $row['comments'];
