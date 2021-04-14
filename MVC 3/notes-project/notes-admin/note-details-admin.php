@@ -187,7 +187,7 @@ if (isset($_POST['download'])) {
                                     <div class="col-md-6">
                                         <div id="<?php echo $id; ?>" start="<?php echo $rate ?>" style="margin-top: -15px;"></div>
                                         <?php
-                                        $query_rating = mysqli_query($conn, "SELECT avg(rating) FROM seller_notes_review WHERE note_id=$id");
+                                        $query_rating = mysqli_query($conn, "SELECT avg(rating) FROM seller_notes_review WHERE note_id=$id AND isactive=1");
                                         while ($row = mysqli_fetch_assoc($query_rating)) {
                                             $rate = $row['avg(rating)'];
                                         }
@@ -212,7 +212,7 @@ if (isset($_POST['download'])) {
                                     </div>
                                     <div class="col-md-6">
                                         <?php
-                                        $review = mysqli_query($conn, "SELECT * FROM seller_notes_review WHERE note_id=$id");
+                                        $review = mysqli_query($conn, "SELECT * FROM seller_notes_review WHERE note_id=$id AND isactive=1");
                                         $review_count = mysqli_num_rows($review);
                                         ?>
 
