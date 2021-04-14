@@ -57,7 +57,7 @@ if (isset($_GET['id'])) {
     seller_notes_review.rating, users.firstname, users.lastname,
     user_profile.profile_picture, users.userid FROM seller_notes_review LEFT JOIN users
      ON seller_notes_review.reviewed_by_id=users.userid
-    LEFT JOIN user_profile ON users.userid = user_profile.user_id WHERE note_id=$id");
+    LEFT JOIN user_profile ON users.userid = user_profile.user_id WHERE note_id=$id AND seller_notes_review.isactive=1");
     while ($row = mysqli_fetch_assoc($review_data)) {
         $review_id = $row['reviewed_by_id'];
         $review_img = $row['profile_picture'];
@@ -84,7 +84,7 @@ if (isset($_GET['id'])) {
 
                     <div id="rate<?php echo $review_id; ?>" start="<?php echo $rate_user; ?>" style="margin-left: 0px; margin-top: -13px;"></div>
                     <?php
-                        $query_review_rate = mysqli_query($conn, "SELECT * FROM seller_notes_review WHERE note_id=$id AND reviewed_by_id=$userid");
+                        $query_review_rate = mysqli_query($conn, "SELECT * FROM seller_notes_review WHERE note_id=$id AND reviewed_by_id=$userid AND isactive=1");
                         while ($row = mysqli_fetch_assoc($query_review_rate)) {
                             $rate_user = $row['rating'];
                             $comment = $row['comments'];
