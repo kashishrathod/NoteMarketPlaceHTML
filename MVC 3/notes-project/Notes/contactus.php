@@ -85,6 +85,7 @@ if (isset($_POST['submit'])) {
             $mail->AltBody = 'Plain text message body for non-HTML email client. Gmail SMTP email body.';   //Alternate body of email
 
             $mail->send();
+            $mail_sent = true;
             //echo "Email message sent.";
         } catch (Exception $e) {
             echo "Error in sending email. Mailer Error: {$mail->ErrorInfo}";
@@ -140,7 +141,15 @@ if (isset($_POST['submit'])) {
     <section id="contactus">
         <div class="container">
             <div class="row">
+
                 <div class="col-md-12">
+                    <?php
+
+                    if ($mail_sent == true) {
+                        echo "<h2 style='color: #6255a5;'><center><b>Your feedback sent successfully!</b></center><h2>";
+                    }
+
+                    ?>
                     <h3>Get In Touch</h3>
                     <p>Let us know how to get back to you</p>
                 </div>
